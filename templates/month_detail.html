@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ month }} Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5dc; }
+        .detail-card { max-width: 600px; margin: 50px auto; padding: 30px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-align: center; }
+        h1 { color: #007bff; margin-bottom: 20px; }
+        .btn-home { background: #ff7f50; border: none; margin-top: 20px; }
+        .btn-home:hover { background: #ff5722; }
+        .graph-img { max-width: 100%; margin: 20px 0; }
+        p { font-weight: 500; font-size: 18px; }
+        .radio-options { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        footer { color: #555555; font-size: 0.9rem; margin-top: 20px; text-align:center; }
+    </style>
+</head>
+<body>
+    <div class="detail-card">
+        <h1>{{ month }} Details</h1>
+        
+        <form action="/month_detail" method="post" class="text-center" id="monthGraphForm">
+            <input type="hidden" name="month" value="{{ month }}">
+            <div class="radio-options">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="month_graph_type" id="columnChart" value="column" {% if graph_type == 'column' or graph_type is none %}checked{% endif %}>
+                    <label class="form-check-label" for="columnChart">Column Chart</label>
+                </div>
+              
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="month_graph_type" id="pieChart" value="pie" {% if graph_type == 'pie' %}checked{% endif %}>
+                    <label class="form-check-label" for="pieChart">Pie Chart</label>
+                </div>
+            </div>
+        </form>
+
+        <img src="{{ url_for('static', filename=graph_file) }}" alt="{{ month }} Graph" class="graph-img">
+        
+        <p><strong>Income:</strong> R {{ income }}</p>
+        <p><strong>Expense:</strong> R {{ expense }}</p>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('show_result_graph') }}" class="btn btn-primary me-2">Back to Analysis</a>
+            <a href="{{ url_for('index') }}" class="btn btn-home">Upload Another File</a>
+        </div>
+    </div>
+    <footer>© {{ current_year }} Msebetsi Solutions Pty Ltd. All rights reserved.</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const monthGraphForm = document.getElementById('monthGraphForm');
+            const monthGraphRadios = monthGraphForm.querySelectorAll('input[name="month_graph_type"]');
+
+            monthGraphRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    monthGraphForm.submit();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
